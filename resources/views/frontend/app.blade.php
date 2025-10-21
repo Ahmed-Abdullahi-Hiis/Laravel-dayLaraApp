@@ -42,6 +42,7 @@
     <!-- Page Content -->
     <main class="pt-24 flex-grow">
         @yield('content')
+        
     </main>
 
     <!-- Footer -->
