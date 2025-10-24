@@ -26,6 +26,7 @@
                 <li><a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-blue-600' : 'hover:text-blue-500' }}">Home</a></li>
                 <li><a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-blue-600' : 'hover:text-blue-500' }}">About</a></li>
                 <li><a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'text-blue-600' : 'hover:text-blue-500' }}">Contact</a></li>
+                 <li><a href="{{ route('blogs.index') }}" class="{{ request()->routeIs('blog') ? 'text-blue-600' : 'hover:text-blue-500' }}">Blog</a></li>
             </ul>
         </nav>
 
@@ -35,6 +36,8 @@
                 <li><a href="{{ route('home') }}" class="hover:text-blue-500 {{ request()->routeIs('home') ? 'text-blue-600' : '' }}">Home</a></li>
                 <li><a href="{{ route('about') }}" class="hover:text-blue-500 {{ request()->routeIs('about') ? 'text-blue-600' : '' }}">About</a></li>
                 <li><a href="{{ route('contact') }}" class="hover:text-blue-500 {{ request()->routeIs('contact') ? 'text-blue-600' : '' }}">Contact</a></li>
+                <li><a href="{{ route('blogs.index') }}" class="hover:text-blue-500 {{ request()->routeIs('blog') ? 'text-blue-600' : '' }}">Blog</a></li>
+
             </ul>
         </div>
     </header>
