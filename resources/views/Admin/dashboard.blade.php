@@ -16,7 +16,11 @@
         <a href="#" class="block py-2.5 px-4 hover:bg-gray-700">Dashboard</a>
         <!-- <a href="#" class="block py-2.5 px-4 hover:bg-gray-700">Users</a> -->
          <a href="{{ route('blogs.index') }}" class="block py-2.5 px-4 hover:bg-gray-700">Blogs</a>
-         <a href="{{ route('admin.users.index') }}" class="block py-2.5 px-4 hover:bg-gray-700">Users</a>
+         <a href="{{ route('blogs.create') }}"
+   class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+   ➕ Create New Blog
+</a>
+
         <a href="#" class="block py-2.5 px-4 hover:bg-gray-700">Settings</a>
         <a href="#" class="block py-2.5 px-4 hover:bg-gray-700">Reports</a>
       </nav>

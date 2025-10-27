@@ -3,6 +3,11 @@
 @section('title', 'Blogs | MyBrand')
 
 @section('content')
+@php
+    // ✅ Safety check: ensures $blogs is always defined
+    $blogs = $blogs ?? collect();
+@endphp
+
 <!-- Hero Section -->
 <section
   class="min-h-[60vh] flex flex-col justify-center items-center text-center bg-cover bg-center relative"
@@ -47,12 +52,30 @@
               </p>
             </div>
             <div class="border-t px-6 py-4 flex justify-between items-center bg-gray-50">
-              <span class="text-sm text-gray-500">
-                📅 {{ \Carbon\Carbon::parse($blog->date)->format('M d, Y') }}
-              </span>
-              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors duration-200">
-                Read More →
-              </a>
+    <span class="text-sm text-gray-500">
+        📅 {{ \Carbon\Carbon::parse($blog->date)->format('M d, Y') }}
+    </span>
+
+    <div class="flex gap-2">
+        <!-- Edit Button -->
+        <a href="{{ route('blogs.edit', $blog->id) }}"
+           class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">
+           Edit
+        </a>
+
+        <!-- Delete Form -->
+        <form action="{{ route('blogs.destroy', $blog->id) }}" method="POST"
+              onsubmit="return confirm('Are you sure you want to delete this blog?');">
+            @csrf
+            @method('DELETE')
+            <button type="submit"
+                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
+                Delete
+            </button>
+        </form>
+    </div>
+</div>
+
             </div>
           </div>
         @endforeach
