@@ -28,4 +28,5 @@ class BlogController extends Controller
 
     return redirect()->route('blogs.index')->with('success', 'Blog created successfully!');
 }
+
 }

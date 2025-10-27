@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -13,8 +13,10 @@
     <aside class="w-64 bg-gray-800 text-white flex-shrink-0">
       <div class="p-6 text-xl font-bold border-b border-gray-700">Admin Panel</div>
       <nav class="mt-6"> 
-        <a href="dashboard" class="block py-2.5 px-4 hover:bg-gray-700">Dashboard</a>
-        <a href="#" class="block py-2.5 px-4 hover:bg-gray-700">Users</a>
+        <a href="#" class="block py-2.5 px-4 hover:bg-gray-700">Dashboard</a>
+        <!-- <a href="#" class="block py-2.5 px-4 hover:bg-gray-700">Users</a> -->
+         <a href="{{ route('blogs.index') }}" class="block py-2.5 px-4 hover:bg-gray-700">Blogs</a>
+         <a href="{{ route('admin.users.index') }}" class="block py-2.5 px-4 hover:bg-gray-700">Users</a>
         <a href="#" class="block py-2.5 px-4 hover:bg-gray-700">Settings</a>
         <a href="#" class="block py-2.5 px-4 hover:bg-gray-700">Reports</a>
       </nav>
