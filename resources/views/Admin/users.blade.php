@@ -2,7 +2,7 @@
 
 @section('title', 'Users')
 @section('page-title', 'User Management')
-
+.
 @section('content')
 <div class="p-6">
     <h1 class="text-2xl font-bold mb-4">User Management</h1>

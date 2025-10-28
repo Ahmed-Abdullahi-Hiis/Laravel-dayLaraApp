@@ -77,7 +77,7 @@ class BlogController extends Controller
         ->route('blogs.index')
         ->with('success', 'Blog deleted successfully!');
 }
-
+,
 
     public function showBlogsPage()
 {

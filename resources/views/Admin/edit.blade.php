@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @section('title', 'Edit Blog')
-
+.
 @section('content')
 <div class="max-w-3xl mx-auto mt-10 bg-white shadow-md rounded-lg p-8">
     <h2 class="text-2xl font-bold mb-6 text-gray-800">Edit Blog</h2>
