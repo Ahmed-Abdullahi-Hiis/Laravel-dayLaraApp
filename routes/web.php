@@ -15,16 +15,12 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 
-// Frontend blogs (users visiting the website)
-Route::prefix('blogs')->group(function () {
-    // Route::get('/', [BlogController::class, 'index'])->name('blogs.index');
-    Route::get('/', [BlogController::class, 'showBlogsPage'])->name('blogs.index');
-
-    Route::get('/create', [BlogController::class, 'create'])->name('blogs.create');
-    Route::post('/', [BlogController::class, 'store'])->name('blogs.store');
-    Route::get('/{blog}/edit', [BlogController::class, 'edit'])->name('blogs.edit');
-    Route::put('/{blog}', [BlogController::class, 'update'])->name('blogs.update');
-    Route::delete('/{blog}', [BlogController::class, 'destroy'])->name('blogs.destroy');
+// ✅ FRONTEND BLOG ROUTES (Public)
+Route::prefix('blogs')->name('frontend.blogs.')->group(function () {
+    Route::get('/', [BlogController::class, 'showBlogsPage'])->name('index');
+    Route::get('/create', [BlogController::class, 'create'])->name('create'); // optional if frontend allows creation
+    Route::post('/', [BlogController::class, 'store'])->name('store');        // optional
+    Route::get('/{blog}', [BlogController::class, 'showSingleBlog'])->name('show');
 });
 
 // =======================
@@ -37,11 +33,18 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         return view('admin.dashboard');
     })->name('dashboard');
 
-    // Admin Users CRUD (manage users)
-    Route::resource('users', UserController::class)->except(['show', 'create', 'store']);
+    // ✅ Admin Blogs (CRUD)
+    Route::prefix('blogs')->name('blogs.')->group(function () {
+        Route::get('/', [BlogController::class, 'index'])->name('index');       // list all blogs
+        Route::get('/create', [BlogController::class, 'create'])->name('create'); // create form
+        Route::post('/', [BlogController::class, 'store'])->name('store');       // store new blog
+        Route::get('/{blog}/edit', [BlogController::class, 'edit'])->name('edit'); // edit form
+        Route::put('/{blog}', [BlogController::class, 'update'])->name('update');  // update blog
+        Route::delete('/{blog}', [BlogController::class, 'destroy'])->name('destroy'); // delete blog
+    });
 
-    // Admin Blogs CRUD (manage blogs)
-    Route::resource('blogs', BlogController::class)->except(['show']);
+    // ✅ Admin Users CRUD
+    Route::resource('users', UserController::class)->except(['show', 'create', 'store']);
 });
 
 // =======================
@@ -62,4 +65,3 @@ Route::resource('products', App\Http\Controllers\ProductController::class);
 // AUTH
 // =======================
 require __DIR__ . '/auth.php';
-.

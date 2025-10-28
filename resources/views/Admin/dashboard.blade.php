@@ -26,15 +26,16 @@
     </a>
 
     <!-- Blogs -->
-    <a href="{{ route('blogs.index') }}" class="flex items-center gap-3 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-200 font-medium text-white">
-      <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h10v2H4v-2z"/>
-      </svg>
-      Blogs
-    </a>
+    <a href="{{ route('admin.blogs.index') }}" class="flex items-center gap-3 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-200 font-medium text-white">
+  <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h10v2H4v-2z"/>
+  </svg>
+  View Blogs
+</a>
+
 
     <!-- Create New Blog -->
-    <a href="{{ route('blogs.create') }}" class="flex items-center gap-3 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-200 font-medium text-white">
+    <a href="{{ route('admin.blogs.create') }}" class="flex items-center gap-3 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-200 font-medium text-white">
       <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
         <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
       </svg>

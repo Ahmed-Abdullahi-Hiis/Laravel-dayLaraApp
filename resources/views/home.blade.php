@@ -2,7 +2,7 @@
 
 @section('title', 'home | MyBrand')
 
-@section('content') .
+@section('content')
 <section
   class="min-h-screen flex flex-col justify-center items-center text-center bg-cover bg-center"
   style="background-image: url('https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1920&q=80');"

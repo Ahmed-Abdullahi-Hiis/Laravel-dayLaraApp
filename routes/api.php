@@ -10,4 +10,4 @@ Route::apiResource('blogs', BlogController::class);
 // Protected API route (requires Sanctum auth)
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
-}); .
+});

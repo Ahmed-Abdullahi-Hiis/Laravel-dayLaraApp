@@ -1,5 +1,5 @@
 @extends('frontend.app')
-.
+
 @section('title', 'About | MyBrand')
 
 @section('content')
