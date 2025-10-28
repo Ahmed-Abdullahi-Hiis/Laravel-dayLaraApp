@@ -29,13 +29,20 @@
                 <td class="py-3 px-6 text-left">{{ $user->email }}</td>
                 <td class="py-3 px-6 text-left capitalize">{{ $user->role }}</td>
                 <td class="py-3 px-6 text-center flex items-center justify-center space-x-3">
-                    <!-- Edit -->
+                    
+                    <!-- Add Blog -->
+                    <a href="{{ route('blogs.create') }}?user_id={{ $user->id }}" 
+                       class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
+                        Add Blog
+                    </a>
+
+                    <!-- Edit User -->
                     <a href="{{ route('admin.users.edit', $user->id) }}" 
                        class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">
                         Edit
                     </a>
 
-                    <!-- Delete -->
+                    <!-- Delete User -->
                     <form action="{{ route('admin.users.destroy', $user->id) }}" 
                           method="POST" 
                           onsubmit="return confirm('Are you sure you want to delete this user?');" 

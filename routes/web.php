@@ -7,7 +7,6 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\EditController;
 
 // =======================
 // FRONTEND ROUTES
@@ -16,7 +15,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 
-// Blog routes for frontend
+// Frontend blogs (users visiting the website)
 Route::prefix('blogs')->group(function () {
     Route::get('/', [BlogController::class, 'index'])->name('blogs.index');
     Route::get('/create', [BlogController::class, 'create'])->name('blogs.create');
@@ -36,11 +35,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         return view('admin.dashboard');
     })->name('dashboard');
 
-    // Users CRUD
+    // Admin Users CRUD (manage users)
     Route::resource('users', UserController::class)->except(['show', 'create', 'store']);
 
-    // Blogs CRUD (admin)
-    Route::resource('blogs', EditController::class)->except(['show']);
+    // Admin Blogs CRUD (manage blogs)
+    Route::resource('blogs', BlogController::class)->except(['show']);
 });
 
 // =======================
@@ -57,7 +56,7 @@ Route::middleware('auth')->group(function () {
 // =======================
 Route::resource('products', App\Http\Controllers\ProductController::class);
 
-// ======================= 
+// =======================
 // AUTH
 // =======================
 require __DIR__ . '/auth.php';
