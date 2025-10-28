@@ -7,20 +7,35 @@ use App\Models\Blog;
 
 class BlogController extends Controller
 {
-    // Display all blogs with pagination
-    public function index()
+   public function index()
+{
+    $blogs = Blog::latest()->paginate(6);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Blogs retrieved successfully',
+        'data'    => $blogs->items(),
+        'pagination' => [
+            'current_page' => $blogs->currentPage(),
+            'last_page'    => $blogs->lastPage(),
+            'per_page'     => $blogs->perPage(),
+            'total'        => $blogs->total(),
+            'next_page_url'=> $blogs->nextPageUrl(),
+            'prev_page_url'=> $blogs->previousPageUrl(),
+        ]
+    ]);
+}
+
+
+    public function show(Blog $blog)
     {
-        $blogs = Blog::latest()->paginate(6);
-        return view('blog', compact('blogs'));
+        return response()->json([
+            'success' => true,
+            'message' => 'Blog retrieved successfully',
+            'data'    => $blog
+        ]);
     }
 
-    // Show the form to create a new blog
-    public function create()
-    {
-        return view('create');
-    }
-
-    // Store a newly created blog
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -29,35 +44,52 @@ class BlogController extends Controller
             'date'        => 'required|date',
         ]);
 
-        Blog::create($validated);
+        $blog = Blog::create($validated);
 
-        return redirect()->route('blogs.index')->with('success', 'Blog created successfully!');
+        return response()->json([
+            'success' => true,
+            'message' => 'Blog created successfully',
+            'data'    => $blog
+        ], 201);
     }
 
-    // Show the form to edit an existing blog
-    public function edit(Blog $blog)
-    {
-        return view('admin.edit', compact('blog'));
-    }
-
-    // Update an existing blog
     public function update(Request $request, Blog $blog)
-    {
-        $validated = $request->validate([
-            'title'       => 'required|string|max:255',
-            'description' => 'required|string',
-            'date'        => 'required|date',
-        ]);
+{
+    $validated = $request->validate([
+        'title'       => 'required|string|max:255',
+        'description' => 'required|string',
+        'date'        => 'required|date',
+    ]);
 
-        $blog->update($validated);
+    $blog->update($validated);
 
-        return redirect()->route('blogs.index')->with('success', 'Blog updated successfully!');
-    }
+    return redirect()
+        ->route('blogs.index')
+        ->with('success', 'Blog updated successfully!');
+}
 
-    // Delete a blog
+
     public function destroy(Blog $blog)
-    {
-        $blog->delete();
-        return redirect()->route('blogs.index')->with('success', 'Blog deleted successfully!');
-    }
+{
+    $blog->delete();
+
+    return redirect()
+        ->route('blogs.index')
+        ->with('success', 'Blog deleted successfully!');
+}
+
+
+    public function showBlogsPage()
+{
+    $blogs = \App\Models\Blog::latest()->paginate(6);
+    return view('blog', compact('blogs'));
+}
+
+public function edit($id)
+{
+    $blog = Blog::findOrFail($id);
+    return view('admin.edit', compact('blog'));
+}
+
+
 }

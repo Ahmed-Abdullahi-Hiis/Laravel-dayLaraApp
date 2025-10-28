@@ -17,7 +17,9 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 
 // Frontend blogs (users visiting the website)
 Route::prefix('blogs')->group(function () {
-    Route::get('/', [BlogController::class, 'index'])->name('blogs.index');
+    // Route::get('/', [BlogController::class, 'index'])->name('blogs.index');
+    Route::get('/', [BlogController::class, 'showBlogsPage'])->name('blogs.index');
+
     Route::get('/create', [BlogController::class, 'create'])->name('blogs.create');
     Route::post('/', [BlogController::class, 'store'])->name('blogs.store');
     Route::get('/{blog}/edit', [BlogController::class, 'edit'])->name('blogs.edit');
