@@ -1,5 +1,5 @@
 <?php
-.
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -43,6 +43,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+       return redirect()->route('login');
+    // return redirect('/'); // or to any public page like your homepage
+
+
     }
 }
