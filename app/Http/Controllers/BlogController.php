@@ -81,4 +81,13 @@ class BlogController extends Controller
         $blog->delete();
         return redirect()->route('admin.blogs.index')->with('success', 'Blog deleted successfully!');
     }
+
+    public function reports() {
+    return view('blogger.reports');
+}
+
+public function settings() {
+    return view('blogger.settings');
+}
+
 }

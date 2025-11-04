@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
@@ -72,14 +71,45 @@ Route::prefix('blogs')->name('frontend.blogs.')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
+
+
+
+/*
+|--------------------------------------------------------------------------
 | BLOGGER ROUTES
 |--------------------------------------------------------------------------
 */
-Route::prefix('blogger')->middleware(['auth', 'blogger'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('blogger.dashboard');
-    })->name('blogger.dashboard');
-});
+Route::prefix('blogger')
+    ->name('blogger.')
+    ->middleware(['auth', 'blogger'])
+    ->group(function () {
+
+        // Dashboard
+        Route::get('/dashboard', function () {
+            return view('blogger.dashboard');
+        })->name('dashboard');
+
+        // ✅ Blogger Blogs CRUD
+        Route::prefix('blogs')->name('blogs.')->group(function () {
+            Route::get('/', [BlogController::class, 'index'])->name('index');      // View all own blogs
+            Route::get('/create', [BlogController::class, 'create'])->name('create'); // Create new blog
+            Route::post('/', [BlogController::class, 'store'])->name('store');       // Store blog
+            Route::get('/{blog}/edit', [BlogController::class, 'edit'])->name('edit'); // Edit blog
+            Route::put('/{blog}', [BlogController::class, 'update'])->name('update');  // Update blog
+            Route::delete('/{blog}', [BlogController::class, 'destroy'])->name('destroy'); // Delete blog
+        });
+
+        // ✅ Blogger Reports (optional)
+        Route::get('/reports', function () {
+            return view('blogger.reports');
+        })->name('reports');
+
+        // ✅ Blogger Settings (optional)
+        Route::get('/settings', function () {
+            return view('blogger.settings');
+        })->name('settings');
+    });
+
 
 
 /*
@@ -87,7 +117,17 @@ Route::prefix('blogger')->middleware(['auth', 'blogger'])->group(function () {
 | ADMIN ROUTES
 |--------------------------------------------------------------------------
 */
-Route::prefix('admin')
+// Route::prefix('admin')
+//     ->name('admin.')
+//     ->middleware(['auth', 'verified', 'admin'])
+//     ->group(function () {
+
+//         // Dashboard
+//         Route::get('/dashboard', function () {
+//             return view('admin.dashboard');
+//         })->name('dashboard');
+
+       Route::prefix('admin')
     ->name('admin.')
     ->middleware(['auth', 'verified', 'admin'])
     ->group(function () {
@@ -96,6 +136,20 @@ Route::prefix('admin')
         Route::get('/dashboard', function () {
             return view('admin.dashboard');
         })->name('dashboard');
+
+        // Reports
+        Route::get('/reports', function () {
+            return view('admin.reports');
+        })->name('reports');
+
+        // Settings
+        Route::get('/settings', function () {
+            return view('admin.settings');
+        })->name('settings');
+    
+
+
+
 
         // ✅ Admin Blogs CRUD
         Route::prefix('blogs')->name('blogs.')->group(function () {

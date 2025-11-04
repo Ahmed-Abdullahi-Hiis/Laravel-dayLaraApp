@@ -12,7 +12,7 @@
     <header class="bg-white shadow-md fixed w-full top-0 z-50">
         <nav class="container mx-auto flex justify-between items-center py-4 px-6">
             <!-- Logo -->
-            <h1 class="text-2xl font-bold text-blue-600">MyBrand</h1>
+            <h1 class="text-2xl font-bold text-blue-600">{{ config ("app.name")}}</h1>
 
             <!-- Hamburger Button (Mobile) -->
             <button id="menu-btn" class="md:hidden block focus:outline-none">

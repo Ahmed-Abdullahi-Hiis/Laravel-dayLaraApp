@@ -40,21 +40,24 @@
           Create New Blog
         </a>
 
-        <!-- Settings -->
-        <a href="#" class="flex items-center gap-3 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-200 font-medium text-white">
-          <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 8a4 4 0 100 8 4 4 0 000-8zm0-5a1 1 0 011 1v1.07a7.003 7.003 0 013.9 1.65l.76-.44a1 1 0 011.37.45l.86 1.49a1 1 0 01-.45 1.37l-.76.44A7.003 7.003 0 0120.93 11H22a1 1 0 011 1v2a1 1 0 01-1 1h-1.07a7.003 7.003 0 01-1.65 3.9l.44.76a1 1 0 01-.45 1.37l-1.49.86a1 1 0 01-1.37-.45l-.44-.76a7.003 7.003 0 01-3.9 1.65V22a1 1 0 01-1 1h-2a1 1 0 01-1-1v-1.07a7.003 7.003 0 01-3.9-1.65l-.76.44a1 1 0 01-1.37-.45l-.86-1.49a1 1 0 01.45-1.37l.76-.44A7.003 7.003 0 013.07 13H2a1 1 0 01-1-1v-2a1 1 0 011-1h1.07a7.003 7.003 0 011.65-3.9l-.44-.76a1 1 0 01.45-1.37l1.49-.86a1 1 0 011.37.45l.44.76A7.003 7.003 0 0111 3.07V2a1 1 0 011-1h2z"/>
-          </svg>
-          Settings
-        </a>
+       <!-- Settings -->
+<a href="{{ route('admin.settings') }}" 
+   class="flex items-center gap-3 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-200 font-medium text-white">
+  <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 8a4 4 0 100 8 4 4 0 000-8zm0-5a1 1 0 011 1v1.07a7.003 7.003 0 013.9 1.65l.76-.44a1 1 0 011.37.45l.86 1.49a1 1 0 01-.45 1.37l-.76.44A7.003 7.003 0 0120.93 11H22a1 1 0 011 1v2a1 1 0 01-1 1h-1.07a7.003 7.003 0 01-1.65 3.9l.44.76a1 1 0 01-.45 1.37l-1.49.86a1 1 0 01-1.37-.45l-.44-.76a7.003 7.003 0 01-3.9 1.65V22a1 1 0 01-1 1h-2a1 1 0 01-1-1v-1.07a7.003 7.003 0 01-3.9-1.65l-.76.44a1 1 0 01-1.37-.45l-.86-1.49a1 1 0 01.45-1.37l.76-.44A7.003 7.003 0 013.07 13H2a1 1 0 01-1-1v-2a1 1 0 011-1h1.07a7.003 7.003 0 011.65-3.9l-.44-.76a1 1 0 01.45-1.37l1.49-.86a1 1 0 011.37.45l.44.76A7.003 7.003 0 0111 3.07V2a1 1 0 011-1h2z"/>
+  </svg>
+  Settings
+</a>
 
-        <!-- Reports -->
-        <a href="#" class="flex items-center gap-3 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-200 font-medium text-white">
-          <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M3 3h18v2H3V3zm0 4h18v2H3V7zm0 4h12v2H3v-2zm0 4h12v2H3v-2zm0 4h12v2H3v-2z"/>
-          </svg>
-          Reports
-        </a>
+<!-- Reports -->
+<a href="{{ route('admin.reports') }}" 
+   class="flex items-center gap-3 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-200 font-medium text-white">
+  <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M3 3h18v2H3V3zm0 4h18v2H3V7zm0 4h12v2H3v-2zm0 4h12v2H3v-2zm0 4h12v2H3v-2z"/>
+  </svg>
+  Reports
+</a>
+
       </nav>
     </aside>
 
