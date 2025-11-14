@@ -12,7 +12,7 @@
     <header class="bg-white shadow-md fixed w-full top-0 z-50">
         <nav class="container mx-auto flex justify-between items-center py-4 px-6">
             <!-- Logo -->
-            <h1 class="text-2xl font-bold text-blue-600">{{ config ("app.name")}}</h1>
+            <h1 class="text-2xl font-bold text-blue-600">{{ config('app.name') }}</h1>
 
             <!-- Hamburger Button (Mobile) -->
             <button id="menu-btn" class="md:hidden block focus:outline-none">
@@ -21,23 +21,46 @@
                 </svg>
             </button>
 
-            <!-- Nav Links -->
+            <!-- Desktop Nav Links -->
             <ul id="menu" class="hidden md:flex space-x-6 font-medium">
-                <li><a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-blue-600' : 'hover:text-blue-500' }}">Home</a></li>
-                <li><a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-blue-600' : 'hover:text-blue-500' }}">About</a></li>
-                <li><a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'text-blue-600' : 'hover:text-blue-500' }}">Contact</a></li>
-                 <li><a href="{{ route('blogs.index') }}" class="{{ request()->routeIs('blog') ? 'text-blue-600' : 'hover:text-blue-500' }}">Blog</a></li>
+                <li>
+                    <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-blue-600' : 'hover:text-blue-500' }}">
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-blue-600' : 'hover:text-blue-500' }}">
+                        About
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'text-blue-600' : 'hover:text-blue-500' }}">
+                        Contact
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('frontend.blogs.index') }}" class="{{ request()->routeIs('frontend.blogs.*') ? 'text-blue-600' : 'hover:text-blue-500' }}">
+                        Blog
+                    </a>
+                </li>
             </ul>
         </nav>
 
         <!-- Mobile Menu Dropdown -->
         <div id="mobile-menu" class="hidden md:hidden bg-white shadow-md">
             <ul class="flex flex-col items-center py-4 space-y-4 font-medium">
-                <li><a href="{{ route('home') }}" class="hover:text-blue-500 {{ request()->routeIs('home') ? 'text-blue-600' : '' }}">Home</a></li>
-                <li><a href="{{ route('about') }}" class="hover:text-blue-500 {{ request()->routeIs('about') ? 'text-blue-600' : '' }}">About</a></li>
-                <li><a href="{{ route('contact') }}" class="hover:text-blue-500 {{ request()->routeIs('contact') ? 'text-blue-600' : '' }}">Contact</a></li>
-                <li><a href="{{ route('blogs.index') }}" class="hover:text-blue-500 {{ request()->routeIs('blog') ? 'text-blue-600' : '' }}">Blog</a></li>
-
+                <li>
+                    <a href="{{ route('home') }}" class="hover:text-blue-500 {{ request()->routeIs('home') ? 'text-blue-600' : '' }}">Home</a>
+                </li>
+                <li>
+                    <a href="{{ route('about') }}" class="hover:text-blue-500 {{ request()->routeIs('about') ? 'text-blue-600' : '' }}">About</a>
+                </li>
+                <li>
+                    <a href="{{ route('contact') }}" class="hover:text-blue-500 {{ request()->routeIs('contact') ? 'text-blue-600' : '' }}">Contact</a>
+                </li>
+                <li>
+                    <a href="{{ route('frontend.blogs.index') }}" class="hover:text-blue-500 {{ request()->routeIs('frontend.blogs.*') ? 'text-blue-600' : '' }}">Blog</a>
+                </li>
             </ul>
         </div>
     </header>
@@ -45,11 +68,10 @@
     <!-- Page Content -->
     <main class="pt-24 flex-grow">
         @yield('content')
-        
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-400 py-6 text-center">
+    <footer class="bg-gray-900 text-gray-400 py-6 text-center mt-auto">
         <p>© {{ date('Y') }} MyBrand. All rights reserved.</p>
     </footer>
 
@@ -62,5 +84,6 @@
             mobileMenu.classList.toggle('hidden');
         });
     </script>
+
 </body>
 </html>

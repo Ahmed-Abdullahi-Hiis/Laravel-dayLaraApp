@@ -3,9 +3,6 @@
 @section('title', 'Blogs | MyBrand')
 
 @section('content')
-@php
-    $blogs = $blogs ?? collect();
-@endphp
 
 <!-- Hero Section -->
 <section
@@ -36,10 +33,15 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($blogs as $blog)
                     <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden flex flex-col border border-gray-100">
-                        <!-- Optional Image Placeholder -->
-                        <div class="h-48 bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white text-2xl font-bold">
-                            {{ strtoupper(substr($blog->title, 0, 1)) }}
-                        </div>
+                        <!-- Blog Image -->
+                        @if($blog->image)
+                            <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}"
+                                 class="h-48 w-full object-cover">
+                        @else
+                            <div class="h-48 bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white text-2xl font-bold">
+                                {{ strtoupper(substr($blog->title, 0, 1)) }}
+                            </div>
+                        @endif
 
                         <div class="p-6 flex flex-col flex-1">
                             <h3 class="text-2xl font-semibold text-gray-800 mb-3 hover:text-blue-600 transition-colors duration-200">
@@ -55,22 +57,10 @@
                                 📅 {{ \Carbon\Carbon::parse($blog->date)->format('M d, Y') }}
                             </span>
 
-                            <div class="flex gap-2">
-                                <a href="{{ route('blogs.edit', $blog->id) }}"
-                                   class="bg-yellow-500 hover:bg-yellow-600 text-white text-sm px-3 py-1 rounded transition">
-                                   ✏️ Edit
-                                </a>
-
-                                <form action="{{ route('blogs.destroy', $blog->id) }}" method="POST"
-                                      onsubmit="return confirm('Are you sure you want to delete this blog?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            class="bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1 rounded transition">
-                                        🗑 Delete
-                                    </button>
-                                </form>
-                            </div>
+                            <a href="{{ route('frontend.blogs.show', $blog->id) }}"
+                               class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 py-1 rounded transition">
+                                Read More
+                            </a>
                         </div>
                     </div>
                 @endforeach
@@ -83,4 +73,5 @@
         @endif
     </div>
 </section>
+
 @endsection

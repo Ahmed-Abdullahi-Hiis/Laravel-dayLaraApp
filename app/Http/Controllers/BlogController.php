@@ -11,16 +11,22 @@ class BlogController extends Controller
     // FRONTEND METHODS
     // =========================
 
-    // Show all blogs for the frontend
+    // Show all published blogs for the frontend
     public function showBlogsPage()
     {
-        $blogs = Blog::latest()->paginate(6);
+        $blogs = Blog::where('status', 'published')
+                     ->latest()
+                     ->paginate(6);
         return view('blog', compact('blogs')); // resources/views/blog.blade.php
     }
 
-    // Show single blog on frontend
+    // Show single blog on frontend (only if published)
     public function showSingleBlog(Blog $blog)
     {
+        if ($blog->status !== 'published') {
+            abort(404); // Don't show drafts
+        }
+
         return view('blog-single', compact('blog')); // resources/views/blog-single.blade.php
     }
 
@@ -28,20 +34,17 @@ class BlogController extends Controller
     // ADMIN METHODS
     // =========================
 
-    // List all blogs in admin dashboard
     public function index()
     {
         $blogs = Blog::latest()->paginate(10);
-        return view('admin.blogs.index', compact('blogs')); // resources/views/admin/blog/index.blade.php
+        return view('admin.blogs.index', compact('blogs')); 
     }
 
-    // Show form to create new blog
     public function create()
     {
-        return view('admin.blogs.create'); // resources/views/admin/blog/create.blade.php
+        return view('admin.blogs.create'); 
     }
 
-    // Store new blog in database
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -55,13 +58,11 @@ class BlogController extends Controller
         return redirect()->route('admin.blogs.index')->with('success', 'Blog created successfully!');
     }
 
-    // Show form to edit an existing blog
     public function edit(Blog $blog)
     {
-        return view('admin.edit', compact('blog')); // resources/views/admin/blog/edit.blade.php
+        return view('admin.edit', compact('blog')); 
     }
 
-    // Update an existing blog
     public function update(Request $request, Blog $blog)
     {
         $validated = $request->validate([
@@ -75,19 +76,19 @@ class BlogController extends Controller
         return redirect()->route('admin.blogs.index')->with('success', 'Blog updated successfully!');
     }
 
-    // Delete a blog
     public function destroy(Blog $blog)
     {
         $blog->delete();
         return redirect()->route('admin.blogs.index')->with('success', 'Blog deleted successfully!');
     }
 
-    public function reports() {
-    return view('blogger.reports');
-}
+    public function reports()
+    {
+        return view('blogger.reports');
+    }
 
-public function settings() {
-    return view('blogger.settings');
-}
-
+    public function settings()
+    {
+        return view('blogger.settings');
+    }
 }

@@ -6,6 +6,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\BloggerBlogController;
+use App\Http\Controllers\Admin\AdminBlogController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProductController;
 
@@ -30,7 +32,6 @@ Route::get('/redirect', function () {
     }
 })->middleware(['auth'])->name('redirect');
 
-
 /*
 |--------------------------------------------------------------------------
 | DASHBOARD (Shared Entry Point)
@@ -52,7 +53,6 @@ Route::get('/dashboard', function () {
     }
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-
 /*
 |--------------------------------------------------------------------------
 | FRONTEND ROUTES
@@ -62,17 +62,10 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 
-// ✅ Public Blogs (Frontend)
 Route::prefix('blogs')->name('frontend.blogs.')->group(function () {
     Route::get('/', [BlogController::class, 'showBlogsPage'])->name('index');
     Route::get('/{blog}', [BlogController::class, 'showSingleBlog'])->name('show');
 });
-
-
-/*
-|--------------------------------------------------------------------------
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -89,45 +82,22 @@ Route::prefix('blogger')
             return view('blogger.dashboard');
         })->name('dashboard');
 
-        // ✅ Blogger Blogs CRUD
-        Route::prefix('blogs')->name('blogs.')->group(function () {
-            Route::get('/', [BlogController::class, 'index'])->name('index');      // View all own blogs
-            Route::get('/create', [BlogController::class, 'create'])->name('create'); // Create new blog
-            Route::post('/', [BlogController::class, 'store'])->name('store');       // Store blog
-            Route::get('/{blog}/edit', [BlogController::class, 'edit'])->name('edit'); // Edit blog
-            Route::put('/{blog}', [BlogController::class, 'update'])->name('update');  // Update blog
-            Route::delete('/{blog}', [BlogController::class, 'destroy'])->name('destroy'); // Delete blog
-        });
+        // Blogger Blogs CRUD
+        Route::resource('blogs', BloggerBlogController::class);
 
-        // ✅ Blogger Reports (optional)
-        Route::get('/reports', function () {
-            return view('blogger.reports');
-        })->name('reports');
+        // Blogger Reports
+        Route::view('/reports', 'blogger.reports')->name('reports');
 
-        // ✅ Blogger Settings (optional)
-        Route::get('/settings', function () {
-            return view('blogger.settings');
-        })->name('settings');
+        // Blogger Settings
+        Route::view('/settings', 'blogger.settings')->name('settings');
     });
-
-
 
 /*
 |--------------------------------------------------------------------------
 | ADMIN ROUTES
 |--------------------------------------------------------------------------
 */
-// Route::prefix('admin')
-//     ->name('admin.')
-//     ->middleware(['auth', 'verified', 'admin'])
-//     ->group(function () {
-
-//         // Dashboard
-//         Route::get('/dashboard', function () {
-//             return view('admin.dashboard');
-//         })->name('dashboard');
-
-       Route::prefix('admin')
+Route::prefix('admin')
     ->name('admin.')
     ->middleware(['auth', 'verified', 'admin'])
     ->group(function () {
@@ -146,25 +116,13 @@ Route::prefix('blogger')
         Route::get('/settings', function () {
             return view('admin.settings');
         })->name('settings');
-    
 
+        // Admin Blogs CRUD
+        Route::resource('blogs', AdminBlogController::class);
 
-
-
-        // ✅ Admin Blogs CRUD
-        Route::prefix('blogs')->name('blogs.')->group(function () {
-            Route::get('/', [BlogController::class, 'index'])->name('index');
-            Route::get('/create', [BlogController::class, 'create'])->name('create');
-            Route::post('/', [BlogController::class, 'store'])->name('store');
-            Route::get('/{blog}/edit', [BlogController::class, 'edit'])->name('edit');
-            Route::put('/{blog}', [BlogController::class, 'update'])->name('update');
-            Route::delete('/{blog}', [BlogController::class, 'destroy'])->name('destroy');
-        });
-
-        // ✅ Admin Users CRUD
+        // Admin Users CRUD
         Route::resource('users', UserController::class)->except(['show', 'create', 'store']);
     });
-
 
 /*
 |--------------------------------------------------------------------------
@@ -177,14 +135,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
 /*
 |--------------------------------------------------------------------------
 | PRODUCTS (Optional)
 |--------------------------------------------------------------------------
 */
 Route::resource('products', ProductController::class);
-
 
 /*
 |--------------------------------------------------------------------------
