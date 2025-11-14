@@ -22,7 +22,7 @@
             </button>
 
             <!-- Desktop Nav Links -->
-            <ul id="menu" class="hidden md:flex space-x-6 font-medium">
+            <ul id="menu" class="hidden md:flex space-x-6 font-medium items-center">
                 <li>
                     <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-blue-600' : 'hover:text-blue-500' }}">
                         Home
@@ -43,24 +43,52 @@
                         Blog
                     </a>
                 </li>
+
+                <!-- Auth Links -->
+                @guest
+                    <li>
+                        <a href="{{ route('login') }}" class="font-bold text-white bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg transition">
+                            Login
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('register') }}" class="font-bold text-white bg-purple-500 hover:bg-purple-600 px-4 py-2 rounded-lg transition">
+                            Register
+                        </a>
+                    </li>
+                @else
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="font-bold text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition">
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+                @endguest
             </ul>
         </nav>
 
         <!-- Mobile Menu Dropdown -->
         <div id="mobile-menu" class="hidden md:hidden bg-white shadow-md">
             <ul class="flex flex-col items-center py-4 space-y-4 font-medium">
-                <li>
-                    <a href="{{ route('home') }}" class="hover:text-blue-500 {{ request()->routeIs('home') ? 'text-blue-600' : '' }}">Home</a>
-                </li>
-                <li>
-                    <a href="{{ route('about') }}" class="hover:text-blue-500 {{ request()->routeIs('about') ? 'text-blue-600' : '' }}">About</a>
-                </li>
-                <li>
-                    <a href="{{ route('contact') }}" class="hover:text-blue-500 {{ request()->routeIs('contact') ? 'text-blue-600' : '' }}">Contact</a>
-                </li>
-                <li>
-                    <a href="{{ route('frontend.blogs.index') }}" class="hover:text-blue-500 {{ request()->routeIs('frontend.blogs.*') ? 'text-blue-600' : '' }}">Blog</a>
-                </li>
+                <li><a href="{{ route('home') }}" class="hover:text-blue-500 {{ request()->routeIs('home') ? 'text-blue-600' : '' }}">Home</a></li>
+                <li><a href="{{ route('about') }}" class="hover:text-blue-500 {{ request()->routeIs('about') ? 'text-blue-600' : '' }}">About</a></li>
+                <li><a href="{{ route('contact') }}" class="hover:text-blue-500 {{ request()->routeIs('contact') ? 'text-blue-600' : '' }}">Contact</a></li>
+                <li><a href="{{ route('frontend.blogs.index') }}" class="hover:text-blue-500 {{ request()->routeIs('frontend.blogs.*') ? 'text-blue-600' : '' }}">Blog</a></li>
+
+                <!-- Auth Links -->
+                @guest
+                    <li><a href="{{ route('login') }}" class="font-bold text-white bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg transition">Login</a></li>
+                    <li><a href="{{ route('register') }}" class="font-bold text-white bg-purple-500 hover:bg-purple-600 px-4 py-2 rounded-lg transition">Register</a></li>
+                @else
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="font-bold text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition">Logout</button>
+                        </form>
+                    </li>
+                @endguest
             </ul>
         </div>
     </header>
