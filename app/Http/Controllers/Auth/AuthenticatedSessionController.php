@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,7 +28,17 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        // ⭐ Redirect based on role
+        if (Auth::user()->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        if (Auth::user()->role === 'blogger') {
+            return redirect()->route('blogger.dashboard');
+        }
+
+        // Fallback
+        return redirect()->route('home');
     }
 
     /**
@@ -43,9 +52,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-       return redirect()->route('login');
-    // return redirect('/'); // or to any public page like your homepage
-
-
+        return redirect()->route('login');
     }
 }
