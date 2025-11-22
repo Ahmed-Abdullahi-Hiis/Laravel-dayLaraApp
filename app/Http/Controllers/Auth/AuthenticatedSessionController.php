@@ -37,6 +37,11 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('blogger.dashboard');
         }
 
+        if (Auth::user()->role === 'customer') {
+    return redirect()->route('customer.dashboard');
+}
+
+
         // Fallback
         return redirect()->route('home');
     }

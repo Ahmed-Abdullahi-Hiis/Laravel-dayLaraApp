@@ -10,15 +10,6 @@
 
             {{-- Summary Cards --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                @php
-                    $cards = [
-                        ['title'=>'Total Users','value'=>'1,245','color'=>'indigo'],
-                        ['title'=>'Active Bloggers','value'=>'237','color'=>'emerald'],
-                        ['title'=>'Total Posts','value'=>'3,894','color'=>'blue'],
-                        ['title'=>'Pending Approvals','value'=>'12','color'=>'rose'],
-                    ];
-                @endphp
-
                 @foreach ($cards as $card)
                     <div class="bg-white shadow-sm rounded-xl p-6 text-center border border-gray-100 hover:shadow-md transition transform hover:-translate-y-1 duration-300">
                         <h3 class="text-gray-500 text-sm font-medium">{{ $card['title'] }}</h3>
@@ -27,7 +18,7 @@
                 @endforeach
             </div>
 
-            {{-- Reports Table --}}
+            {{-- Recent Activity Reports --}}
             <div class="bg-white shadow-sm rounded-xl p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
@@ -58,24 +49,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="border-t hover:bg-gray-50">
-                            <td class="px-6 py-3 text-gray-700 font-medium">User Registration</td>
-                            <td class="px-6 py-3 text-gray-600">New user <strong>Jane Doe</strong> registered</td>
-                            <td class="px-6 py-3"><span class="text-green-600 font-medium">Verified</span></td>
-                            <td class="px-6 py-3 text-gray-500">Nov 3, 2025</td>
-                        </tr>
-                        <tr class="border-t hover:bg-gray-50">
-                            <td class="px-6 py-3 text-gray-700 font-medium">Post Approval</td>
-                            <td class="px-6 py-3 text-gray-600">Post <strong>“Laravel Tips 2025”</strong> awaiting review</td>
-                            <td class="px-6 py-3"><span class="text-yellow-600 font-medium">Pending</span></td>
-                            <td class="px-6 py-3 text-gray-500">Nov 2, 2025</td>
-                        </tr>
-                        <tr class="border-t hover:bg-gray-50">
-                            <td class="px-6 py-3 text-gray-700 font-medium">Comment Moderation</td>
-                            <td class="px-6 py-3 text-gray-600">Flagged comment on <strong>“AI Trends”</strong></td>
-                            <td class="px-6 py-3"><span class="text-rose-600 font-medium">Action Needed</span></td>
-                            <td class="px-6 py-3 text-gray-500">Nov 1, 2025</td>
-                        </tr>
+                        @foreach($recentActivities as $activity)
+                            <tr class="border-t hover:bg-gray-50">
+                                <td class="px-6 py-3 text-gray-700 font-medium">{!! $activity['type'] !!}</td>
+                                <td class="px-6 py-3 text-gray-600">{!! $activity['details'] !!}</td>
+                                <td class="px-6 py-3">
+                                    @php
+                                        $statusColor = match($activity['status']) {
+                                            'Verified' => 'green',
+                                            'Pending' => 'yellow',
+                                            'Action Needed' => 'rose',
+                                            default => 'gray'
+                                        };
+                                    @endphp
+                                    <span class="text-{{ $statusColor }}-600 font-medium">{{ $activity['status'] }}</span>
+                                </td>
+                                <td class="px-6 py-3 text-gray-500">{{ $activity['date'] }}</td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

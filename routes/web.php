@@ -10,6 +10,62 @@ use App\Http\Controllers\BloggerBlogController;
 use App\Http\Controllers\Admin\AdminBlogController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Admin\AdminSettingsController;
+use App\Http\Controllers\Admin\AdminReportsController;
+
+use App\Http\Controllers\Customer\CustomerDashboardController;
+use App\Http\Controllers\Customer\CustomerPaymentController;
+
+Route::middleware(['auth', 'customer'])->prefix('customer')->name('customer.')->group(function () {
+    Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/buy', [CustomerPaymentController::class, 'buy'])->name('buy');
+    Route::post('/pay', [CustomerPaymentController::class, 'processPayment'])->name('pay'); // new route
+    Route::post('/callback', [CustomerPaymentController::class, 'mpesaCallback'])->name('callback'); // callback route
+    Route::get('/orders', [CustomerDashboardController::class, 'orders'])->name('orders');
+});
+
+
+
+
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN ROUTES
+|--------------------------------------------------------------------------
+*/
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth', 'verified', 'admin'])
+    ->group(function () {
+
+        // Dashboard
+        Route::get('/dashboard', function () {
+            return view('admin.dashboard');
+        })->name('dashboard');
+
+        // Reports (Controller)
+        Route::get('/reports', [AdminReportsController::class, 'index'])->name('reports');
+
+        // Settings
+        Route::get('/settings', function () {
+            return view('admin.settings');
+        })->name('settings');
+
+        // Admin Blogs CRUD
+        Route::resource('blogs', AdminBlogController::class);
+
+        // Admin Users CRUD
+        Route::resource('users', UserController::class)->except(['show', 'create', 'store']);
+
+        // Admin Settings POST routes
+        Route::post('/settings/general', [AdminSettingsController::class, 'updateGeneral'])->name('settings.general');
+        Route::post('/settings/password', [AdminSettingsController::class, 'updatePassword'])->name('settings.password');
+        Route::post('/settings/system', [AdminSettingsController::class, 'updateSystem'])->name('settings.system');
+    });
 
 /*
 |--------------------------------------------------------------------------
@@ -90,38 +146,6 @@ Route::prefix('blogger')
 
         // Blogger Settings
         Route::view('/settings', 'blogger.settings')->name('settings');
-    });
-
-/*
-|--------------------------------------------------------------------------
-| ADMIN ROUTES
-|--------------------------------------------------------------------------
-*/
-Route::prefix('admin')
-    ->name('admin.')
-    ->middleware(['auth', 'verified', 'admin'])
-    ->group(function () {
-
-        // Dashboard
-        Route::get('/dashboard', function () {
-            return view('admin.dashboard');
-        })->name('dashboard');
-
-        // Reports
-        Route::get('/reports', function () {
-            return view('admin.reports');
-        })->name('reports');
-
-        // Settings
-        Route::get('/settings', function () {
-            return view('admin.settings');
-        })->name('settings');
-
-        // Admin Blogs CRUD
-        Route::resource('blogs', AdminBlogController::class);
-
-        // Admin Users CRUD
-        Route::resource('users', UserController::class)->except(['show', 'create', 'store']);
     });
 
 /*

@@ -9,7 +9,24 @@
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-md rounded-2xl p-8 space-y-10">
 
-                {{-- General Site Settings --}}
+                {{-- Display Success/Error Messages --}}
+                @if(session('success'))
+                    <div class="bg-green-100 text-green-800 px-4 py-2 rounded mb-4">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="bg-red-100 text-red-800 px-4 py-2 rounded mb-4">
+                        <ul class="list-disc pl-5">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                {{-- General Site Settings (Demo Only) --}}
                 <div>
                     <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4 flex items-center gap-2">
                         🌐 General Settings
@@ -31,19 +48,20 @@
                         </div>
 
                         <div class="mt-6">
-                            <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">
+                            <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
+                                    onclick="alert('General settings updated successfully (demo)'); return false;">
                                 💾 Save Settings
                             </button>
                         </div>
                     </form>
                 </div>
 
-                {{-- Password Update --}}
+                {{-- Password Update (Functional) --}}
                 <div>
                     <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4 flex items-center gap-2">
                         🔒 Change Password
                     </h3>
-                    <form method="POST" action="#">
+                    <form method="POST" action="{{ route('admin.settings.password') }}">
                         @csrf
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div>
@@ -58,7 +76,7 @@
                             </div>
                             <div>
                                 <label class="block text-gray-700 text-sm font-medium mb-2">Confirm Password</label>
-                                <input type="password" name="confirm_password"
+                                <input type="password" name="new_password_confirmation"
                                        class="border rounded-lg w-full px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
                         </div>
@@ -71,7 +89,7 @@
                     </form>
                 </div>
 
-                {{-- System Controls --}}
+                {{-- System Controls (Demo Only) --}}
                 <div>
                     <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4 flex items-center gap-2">
                         ⚡ System Controls
@@ -91,7 +109,8 @@
                         </div>
 
                         <div class="mt-6">
-                            <button type="submit" class="bg-rose-600 text-white px-6 py-2 rounded-lg hover:bg-rose-700 transition">
+                            <button type="submit" class="bg-rose-600 text-white px-6 py-2 rounded-lg hover:bg-rose-700 transition"
+                                    onclick="alert('System settings updated successfully (demo)'); return false;">
                                 ⚙️ Apply Changes
                             </button>
                         </div>
