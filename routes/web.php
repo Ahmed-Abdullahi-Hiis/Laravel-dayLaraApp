@@ -16,12 +16,40 @@ use App\Http\Controllers\Admin\AdminReportsController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\CustomerPaymentController;
 
+use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\NewPasswordController;
+
+// Show forgot password form
+Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
+    ->middleware('guest')
+    ->name('password.request');
+
+// Send reset link email
+Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+    ->middleware('guest')
+    ->name('password.email');
+
+// Show reset password form
+Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
+    ->middleware('guest')
+    ->name('password.reset');
+
+// Handle reset password form submission
+Route::post('reset-password', [NewPasswordController::class, 'store'])
+    ->middleware('guest')
+    ->name('password.update');
+
+
+
+
+
 Route::middleware(['auth', 'customer'])->prefix('customer')->name('customer.')->group(function () {
     Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
     Route::get('/buy', [CustomerPaymentController::class, 'buy'])->name('buy');
     Route::post('/pay', [CustomerPaymentController::class, 'processPayment'])->name('pay'); // new route
     Route::post('/callback', [CustomerPaymentController::class, 'mpesaCallback'])->name('callback'); // callback route
     Route::get('/orders', [CustomerDashboardController::class, 'orders'])->name('orders');
+     Route::match(['get', 'post'], '/check-payment', [CustomerPaymentController::class, 'checkPaymentStatus'])->name('checkPayment');
 });
 
 

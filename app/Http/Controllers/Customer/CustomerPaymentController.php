@@ -35,7 +35,7 @@ public function buy()
             'id' => 3,
             'name' => 'Dell XPS 13 Laptop',
             'description' => 'Powerful ultrabook for work and gaming with excellent battery life.',
-            'price' => 120000,
+            'price' => 1,
             'image' => asset('storage/uploads/products/dellxps13.jpeg'),
         ],
     ];
@@ -137,19 +137,60 @@ public function buy()
     /**
      * Handle M-Pesa Callback
      */
-    public function mpesaCallback(Request $request)
-    {
-        $data = $request->all();
-        \Log::info('M-Pesa Callback:', $data);
+    // public function mpesaCallback(Request $request)
+    // {
+    //     $data = $request->all();
+    //     \Log::info('M-Pesa Callback:', $data);
 
-        if (isset($data['Body']['stkCallback']['ResultCode']) && $data['Body']['stkCallback']['ResultCode'] == 0) {
-            $items = $data['Body']['stkCallback']['CallbackMetadata']['Item'];
+    //     if (isset($data['Body']['stkCallback']['ResultCode']) && $data['Body']['stkCallback']['ResultCode'] == 0) {
+    //         $items = $data['Body']['stkCallback']['CallbackMetadata']['Item'];
 
+    //         $amount = $items[0]['Value'] ?? null;
+    //         $mpesaReceipt = $items[1]['Value'] ?? null;
+    //         $phone = $items[4]['Value'] ?? null;
+
+    //         // Save payment
+    //         Payment::create([
+    //             'phone' => $phone,
+    //             'amount' => $amount,
+    //             'receipt_number' => $mpesaReceipt,
+    //             'status' => 'paid'
+    //         ]);
+
+    //         // Save order for logged-in user
+    //         if (Auth::check()) {
+    //             Order::create([
+    //                 'product_name' => session('product_name') ?? 'Unknown Product',
+    //                 'amount' => $amount,
+    //                 'status' => 'completed',
+    //                 'user_id' => Auth::id(),
+    //             ]);
+
+    //             session()->forget('product_name');
+    //         }
+    //     }
+
+    //     return response()->json(['status' => 'success']);
+    // }
+
+
+public function mpesaCallback(Request $request)
+{
+    $data = $request->all();
+    \Log::info('M-Pesa Callback:', $data);
+
+    if (isset($data['Body']['stkCallback'])) {
+        $callback = $data['Body']['stkCallback'];
+        $resultCode = $callback['ResultCode'];
+        $resultDesc = $callback['ResultDesc'];
+
+        if ($resultCode == 0) {
+            // Payment successful
+            $items = $callback['CallbackMetadata']['Item'];
             $amount = $items[0]['Value'] ?? null;
             $mpesaReceipt = $items[1]['Value'] ?? null;
             $phone = $items[4]['Value'] ?? null;
 
-            // Save payment
             Payment::create([
                 'phone' => $phone,
                 'amount' => $amount,
@@ -157,7 +198,6 @@ public function buy()
                 'status' => 'paid'
             ]);
 
-            // Save order for logged-in user
             if (Auth::check()) {
                 Order::create([
                     'product_name' => session('product_name') ?? 'Unknown Product',
@@ -168,10 +208,23 @@ public function buy()
 
                 session()->forget('product_name');
             }
-        }
 
-        return response()->json(['status' => 'success']);
+        } else {
+            // Payment failed / canceled
+            Payment::create([
+                'phone' => $callback['PhoneNumber'] ?? null,
+                'amount' => 0,
+                'receipt_number' => null,
+                'status' => 'cancelled', // or 'failed'
+            ]);
+        }
     }
+
+    return response()->json(['status' => 'success']);
+}
+
+
+
 
     /**
      * Show My Orders
@@ -184,5 +237,27 @@ public function buy()
 
         return view('customer.orders', compact('orders'));
     }
-}
 
+/**
+ * Check payment status by phone number
+ */
+public function checkPaymentStatus(Request $request)
+{
+    $request->validate([
+        'phone' => 'required|digits:12',
+    ]);
+
+    $phone = $request->phone;
+
+    // Get all payments for this phone
+    $payments = Payment::where('phone', $phone)
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+    if ($payments->isEmpty()) {
+        return back()->with('error', 'No payments found for this phone number.');
+    }
+
+    return view('customer.check-payment', compact('payments', 'phone'));
+}
+}

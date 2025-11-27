@@ -16,10 +16,17 @@
         <p class="text-gray-200 text-lg md:text-xl mb-8">
             We create modern and powerful digital solutions to elevate your business.
         </p>
-        <a href="#login-section"
-           class="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition transform hover:scale-105">
-           Login / Register
-        </a>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="#login-section"
+               class="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition transform hover:scale-105">
+               Login / Register
+            </a>
+            <a href="{{ route('customer.buy') }}"
+               class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition transform hover:scale-105">
+               Buy Products
+            </a>
+        </div>
     </div>
 </section>
 

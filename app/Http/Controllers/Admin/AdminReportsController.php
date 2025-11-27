@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Blog;
 use App\Models\Comment;
+use App\Models\Report;
 use Illuminate\Http\Request;
 
 class AdminReportsController extends Controller
@@ -39,7 +40,7 @@ class AdminReportsController extends Controller
             ],
         ];
 
-        // Recent activities (latest 10 for example)
+        // Recent activities
         $recentActivities = [];
 
         // Latest user registrations
@@ -74,6 +75,22 @@ class AdminReportsController extends Controller
                 'date' => $comment->created_at->format('M d, Y'),
             ];
         }
+
+        // Latest test reports
+        $reports = Report::latest()->take(5)->get();
+        foreach ($reports as $report) {
+            $recentActivities[] = [
+                'type' => $report->type,
+                'details' => $report->details,
+                'status' => $report->status,
+                'date' => $report->created_at->format('M d, Y'),
+            ];
+        }
+
+        // Sort activities by date descending (latest first)
+        usort($recentActivities, function ($a, $b) {
+            return strtotime($b['date']) <=> strtotime($a['date']);
+        });
 
         return view('admin.reports', compact('cards', 'recentActivities'));
     }

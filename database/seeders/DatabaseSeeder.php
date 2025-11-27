@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             
             UserSeeder::class, // ✅ new
             BlogSeeder::class,
+            TestReportsSeeder::class, // ✅ new test reports
         ]);
     }
 }
