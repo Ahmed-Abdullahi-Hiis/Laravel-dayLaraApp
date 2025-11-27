@@ -54,6 +54,9 @@ Route::middleware(['auth', 'customer'])->prefix('customer')->name('customer.')->
 
 
 
+Route::get('/help-center', function () {
+    return view('help-center'); // create resources/views/help-center.blade.php
+})->name('help.center');
 
 
 

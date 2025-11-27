@@ -14,38 +14,34 @@ class CustomerPaymentController extends Controller
     /**
      * Show the Buy Products page
      */
-public function buy()
-{
-    $products = [
-        [
-            'id' => 1,
-            'name' => 'iPhone 15 Pro',
-            'description' => 'Latest Apple iPhone 15 Pro with amazing camera and performance.',
-            'price' => 150000,
-            'image' => asset('storage/uploads/products/iphone15.jpeg'),
-        ],
-        [
-            'id' => 2,
-            'name' => 'Samsung Galaxy S23',
-            'description' => 'High-performance Android smartphone with sleek design.',
-            'price' => 95000,
-            'image' => asset('storage/uploads/products/galaxyS23.jpeg'),
-        ],
-        [
-            'id' => 3,
-            'name' => 'Dell XPS 13 Laptop',
-            'description' => 'Powerful ultrabook for work and gaming with excellent battery life.',
-            'price' => 1,
-            'image' => asset('storage/uploads/products/dellxps13.jpeg'),
-        ],
-    ];
+    public function buy()
+    {
+        $products = [
+            [
+                'id' => 1,
+                'name' => 'iPhone 15 Pro',
+                'description' => 'Latest Apple iPhone 15 Pro with amazing camera and performance.',
+                'price' => 150000,
+                'image' => asset('storage/uploads/products/iphone15.jpeg'),
+            ],
+            [
+                'id' => 2,
+                'name' => 'Samsung Galaxy S23',
+                'description' => 'High-performance Android smartphone with sleek design.',
+                'price' => 95000,
+                'image' => asset('storage/uploads/products/galaxyS23.jpeg'),
+            ],
+            [
+                'id' => 3,
+                'name' => 'Dell XPS 13 Laptop',
+                'description' => 'Powerful ultrabook for work and gaming with excellent battery life.',
+                'price' => 1,
+                'image' => asset('storage/uploads/products/dellxps13.jpeg'),
+            ],
+        ];
 
-    return view('customer.buy', compact('products'));
-}
-
-
-
-    
+        return view('customer.buy', compact('products'));
+    }
 
     /**
      * Process M-Pesa STK Push Payment
@@ -53,7 +49,7 @@ public function buy()
     public function processPayment(Request $request)
     {
         $request->validate([
-            'phone' => 'required|digits:12', 
+            'phone' => 'required|digits:12',
             'amount' => 'required|numeric|min:1',
             'product_name' => 'required|string|max:255',
         ]);
@@ -64,6 +60,14 @@ public function buy()
 
         // Save product name temporarily in session
         session(['product_name' => $productName]);
+
+        // Create a pending payment immediately
+        $payment = Payment::create([
+            'phone' => $phone,
+            'amount' => $amount,
+            'receipt_number' => null,
+            'status' => 'pending',
+        ]);
 
         // M-Pesa credentials
         $consumerKey = env('MPESA_CONSUMER_KEY');
@@ -76,12 +80,12 @@ public function buy()
         $urls = [
             'sandbox' => [
                 'token' => 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials',
-                'stk'   => 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest',
+                'stk' => 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest',
             ],
             'live' => [
                 'token' => 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials',
-                'stk'   => 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest',
-            ]
+                'stk' => 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest',
+            ],
         ];
 
         try {
@@ -137,94 +141,51 @@ public function buy()
     /**
      * Handle M-Pesa Callback
      */
-    // public function mpesaCallback(Request $request)
-    // {
-    //     $data = $request->all();
-    //     \Log::info('M-Pesa Callback:', $data);
+    public function mpesaCallback(Request $request)
+    {
+        $data = $request->all();
+        \Log::info('M-Pesa Callback:', $data);
 
-    //     if (isset($data['Body']['stkCallback']['ResultCode']) && $data['Body']['stkCallback']['ResultCode'] == 0) {
-    //         $items = $data['Body']['stkCallback']['CallbackMetadata']['Item'];
+        if (isset($data['Body']['stkCallback'])) {
+            $callback = $data['Body']['stkCallback'];
+            $resultCode = $callback['ResultCode'];
 
-    //         $amount = $items[0]['Value'] ?? null;
-    //         $mpesaReceipt = $items[1]['Value'] ?? null;
-    //         $phone = $items[4]['Value'] ?? null;
+            // Find the pending payment
+            $pendingPayment = Payment::where('phone', $callback['PhoneNumber'] ?? null)
+                                     ->where('status', 'pending')
+                                     ->latest()
+                                     ->first();
 
-    //         // Save payment
-    //         Payment::create([
-    //             'phone' => $phone,
-    //             'amount' => $amount,
-    //             'receipt_number' => $mpesaReceipt,
-    //             'status' => 'paid'
-    //         ]);
-
-    //         // Save order for logged-in user
-    //         if (Auth::check()) {
-    //             Order::create([
-    //                 'product_name' => session('product_name') ?? 'Unknown Product',
-    //                 'amount' => $amount,
-    //                 'status' => 'completed',
-    //                 'user_id' => Auth::id(),
-    //             ]);
-
-    //             session()->forget('product_name');
-    //         }
-    //     }
-
-    //     return response()->json(['status' => 'success']);
-    // }
-
-
-public function mpesaCallback(Request $request)
-{
-    $data = $request->all();
-    \Log::info('M-Pesa Callback:', $data);
-
-    if (isset($data['Body']['stkCallback'])) {
-        $callback = $data['Body']['stkCallback'];
-        $resultCode = $callback['ResultCode'];
-        $resultDesc = $callback['ResultDesc'];
-
-        if ($resultCode == 0) {
-            // Payment successful
-            $items = $callback['CallbackMetadata']['Item'];
-            $amount = $items[0]['Value'] ?? null;
-            $mpesaReceipt = $items[1]['Value'] ?? null;
-            $phone = $items[4]['Value'] ?? null;
-
-            Payment::create([
-                'phone' => $phone,
-                'amount' => $amount,
-                'receipt_number' => $mpesaReceipt,
-                'status' => 'paid'
-            ]);
-
-            if (Auth::check()) {
-                Order::create([
-                    'product_name' => session('product_name') ?? 'Unknown Product',
-                    'amount' => $amount,
-                    'status' => 'completed',
-                    'user_id' => Auth::id(),
+            if ($resultCode == 0 && $pendingPayment) {
+                // Payment successful
+                $items = $callback['CallbackMetadata']['Item'];
+                $pendingPayment->update([
+                    'amount' => $items[0]['Value'] ?? $pendingPayment->amount,
+                    'receipt_number' => $items[1]['Value'] ?? null,
+                    'status' => 'paid'
                 ]);
 
-                session()->forget('product_name');
+                if (Auth::check()) {
+                    Order::create([
+                        'product_name' => session('product_name') ?? 'Unknown Product',
+                        'amount' => $pendingPayment->amount,
+                        'status' => 'completed',
+                        'user_id' => Auth::id(),
+                    ]);
+
+                    session()->forget('product_name');
+                }
+
+            } elseif ($pendingPayment) {
+                // Payment failed / canceled
+                $pendingPayment->update([
+                    'status' => 'cancelled'
+                ]);
             }
-
-        } else {
-            // Payment failed / canceled
-            Payment::create([
-                'phone' => $callback['PhoneNumber'] ?? null,
-                'amount' => 0,
-                'receipt_number' => null,
-                'status' => 'cancelled', // or 'failed'
-            ]);
         }
+
+        return response()->json(['status' => 'success']);
     }
-
-    return response()->json(['status' => 'success']);
-}
-
-
-
 
     /**
      * Show My Orders
@@ -238,26 +199,26 @@ public function mpesaCallback(Request $request)
         return view('customer.orders', compact('orders'));
     }
 
-/**
- * Check payment status by phone number
- */
-public function checkPaymentStatus(Request $request)
-{
-    $request->validate([
-        'phone' => 'required|digits:12',
-    ]);
+    /**
+     * Check payment status by phone number
+     */
+    public function checkPaymentStatus(Request $request)
+    {
+        $request->validate([
+            'phone' => 'required|digits:12',
+        ]);
 
-    $phone = $request->phone;
+        $phone = $request->phone;
 
-    // Get all payments for this phone
-    $payments = Payment::where('phone', $phone)
+        // Get all payments for this phone
+        $payments = Payment::where('phone', $phone)
                         ->orderBy('created_at', 'desc')
                         ->get();
 
-    if ($payments->isEmpty()) {
-        return back()->with('error', 'No payments found for this phone number.');
-    }
+        if ($payments->isEmpty()) {
+            return back()->with('error', 'No payments found for this phone number.');
+        }
 
-    return view('customer.check-payment', compact('payments', 'phone'));
-}
+        return view('customer.check-payment', compact('payments', 'phone'));
+    }
 }

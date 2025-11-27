@@ -93,4 +93,46 @@
         @endguest
     </div>
 </section>
+
+<!-- FAQ Section -->
+<section id="faq-section" class="py-16 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-12">Frequently Asked Questions</h2>
+        <div class="space-y-4">
+            @php
+                $faqs = [
+                    ['question' => 'How do I create an account?', 'answer' => 'You can create an account by clicking the Register button and filling out the form.'],
+                    ['question' => 'What payment methods are accepted?', 'answer' => 'We currently accept mobile payments via MPESA.'],
+                    ['question' => 'How can I contact support?', 'answer' => 'You can contact us via email at support@mybrand.com or call +254 700 000 000.'],
+                ];
+            @endphp
+
+            @foreach($faqs as $faq)
+            <div x-data="{ open: false }" class="border-b border-gray-200 pb-4">
+                <button @click="open = !open" class="w-full flex justify-between items-center text-left text-gray-800 font-medium">
+                    {{ $faq['question'] }}
+                    <span x-text="open ? '-' : '+' " class="text-xl"></span>
+                </button>
+                <div x-show="open" class="mt-2 text-gray-600">
+                    {{ $faq['answer'] }}
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+<!-- Help Center Section -->
+<section id="help-center" class="py-16 bg-gray-100">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">Need More Help?</h2>
+        <p class="text-gray-600 mb-8">Visit our Help Center for detailed guides and support resources.</p>
+        <a href="{{ route('help.center') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition transform hover:scale-105">
+            Go to Help Center
+        </a>
+    </div>
+</section>
+
+<!-- Alpine.js for FAQ toggles -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 @endsection
