@@ -15,4 +15,10 @@ class Order extends Model
         'status',
         'user_id',
     ];
+
+    // Add this relationship
+    public function payment()
+    {
+        return $this->hasOne(Payment::class, 'order_id');
+    }
 }
